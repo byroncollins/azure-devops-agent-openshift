@@ -1,20 +1,36 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# azure-devops-agent-openshift
+OpenShift manifests and instructions for running Azure Agent on OpenShift
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+# Build Instructions
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+## Create azure-repos pull secret
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+```bash
+# Create azure devops basic auth secret for accessing git repo
+# replace <user_name> with your username
+# replace <token> with the generated token from azure devops
+oc create secret generic azure-repo-secret \
+    --from-literal=username=<user_name> \
+    --from-literal=password=<token> \
+    --type=kubernetes.io/basic-auth
+```
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+## Create build config
+
+# Deployment Instructions
+
+## Create azure-agent configmap 
+
+```bash
+oc process -f manifests/azure-agent-configmap.yaml \
+    --param=AZP_URL=https://mocatad.visualstudio.com/DNZ-269 \
+    --param=AZP_AGENT_NAME="Dev.Container" | oc apply -f -
+
+```
+
+## Create azure-agent secret with PAT
+
+```bash
+oc process -f manifests/azure-agent-secret.yaml \
+    --param=AZP_TOKEN=waz6v2wtxr6r2qalgjnfujkrv6dexaqqy7ygzhm273zsm4676ana | oc apply -f - 
+```

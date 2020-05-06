@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: azure-agent-configmap-template
+  annotations:
+    description: "azure-agent configmap template"
+    tags: "azure-agent"
+parameters:
+- description: Azure DevOps instance
+  name: AZP_URL
+  required: true  
+- description: Azure DevOps Pool name
+  name: AZP_AGENT_POOL
+  required: true
+  value: ""
+objects:
+- apiVersion: v1
+  data:
+    AZP_URL: ${AZP_URL}
+    AZP_AGENT_POOL: ${AZP_AGENT_POOL}
+  kind: ConfigMap
+  metadata:
+    name: azure-agent

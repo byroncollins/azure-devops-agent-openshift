@@ -1,0 +1,72 @@
+oc new-app 
+
+
+docker run \
+  -e VSTS_ACCOUNT=<name> \
+  -e VSTS_TOKEN=<pat> \
+  -e VSTS_AGENT='$(hostname)-agent' \
+  -e VSTS_POOL=mypool \
+  -e VSTS_WORK='/var/vsts/$VSTS_AGENT' \
+  -v /var/vsts:/var/vsts \
+  -it mcr.microsoft.com/azure-pipelines/vsts-agent:ubuntu-16.04
+
+
+kubectl create secret generic registry --from-literal=VSTS_TOKEN=Personal-Access-Token --from-literal=VSTS_ACCOUNT=AzurePipeline-Account
+
+
+
+oc new-project azure-agent
+oc create cm/azure-agent 
+
+oc create configmap azure-agent \
+--from-literal=VSTS_ACCOUNT=Byron.Collins@datacom.co.nz \
+--from-literal=VSTS_POOL="Dev.Container"
+
+
+oc create secret generic azure-agent-token \
+--from-literal=VSTS_TOKEN=waz6v2wtxr6r2qalgjnfujkrv6dexaqqy7ygzhm273zsm4676ana
+
+oc new-app --docker-image=mcr.microsoft.com/azure-pipelines/vsts-agent:ubuntu-16.04 \
+--env=
+
+waz6v2wtxr6r2qalgjnfujkrv6dexaqqy7ygzhm273zsm4676ana
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azure-agent-ubuntu
+  labels:
+    app: azure-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: azure-agent
+  template:
+    metadata:
+      labels:
+        app: azure-agent
+    spec:
+      containers:
+        - env:
+            - name: VSTS_AGENT_TYPE
+              value: DEPLOYMENT
+          envFrom:
+            - configMapRef:
+                name: azure-agent
+            - secretRef:
+                name: azure-agent-token
+        name: azure-agent
+        image: acrdiaprdauesdoccms.azurecr.io/ei/vsts-agent:ubuntu-16.04-deployment
+        imagePullSecrets:
+          - name: azure-repo-secret
+
+
+
+kubectl create secret generic docker-auth -n openshift \
+    --from-file=.dockerconfigjson=~/.docker/config.json \
+    --type=kubernetes.io/dockerconfigjson
+
+
+
