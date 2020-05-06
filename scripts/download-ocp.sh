@@ -30,7 +30,7 @@ echo "OPENSHIFT_BINARY_FILE=${OPENSHIFT_BINARY_FILE}"
 #Download OpenShift client binary
 OPENSHIFT_URL=OPENSHIFT_${OPENSHIFT_MAJOR_VERSION}_CLIENT_BINARY_URL
 echo "OPENSHIFT_URL=${!OPENSHIFT_URL}"
-wget -O /tmp/${OPENSHIFT_BINARY_FILE} ${!OPENSHIFT_URL}
+curl --silent --show-error --output /tmp/${OPENSHIFT_BINARY_FILE} ${!OPENSHIFT_URL}
 
 #Install OpenShift Client Binary
 mkdir -p /usr/local/bin 
