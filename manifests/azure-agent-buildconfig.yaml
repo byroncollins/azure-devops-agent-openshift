@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: azure-agent-buildconfig-template
+  annotations:
+    description: "azure-agent buildconfig template"
+    tags: "azure-agent"
+parameters:
+- description: GIT URL For Dockerfile
+  name: GIT_URL
+  required: true
+- description: git repo secret name
+  name: REPO_SECRET
+  value: ""
+- description: OpenShift client binary version to install
+  name: OPENSHIFT_VERSION
+  value: "3.11.188"
+objects:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    labels:
+      build: azure-devops-agent
+    name: azure-devops-agent
+  spec:
+    lookupPolicy:
+      local: false
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      build: azure-devops-agent
+    name: azure-devops-agent
+  spec:
+    completionDeadlineSeconds: 1800
+    failedBuildsHistoryLimit: 5
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: azure-devops-agent:latest
+    resources:
+      limits:
+        cpu: "200m" 
+        memory: "256Mi" 
+    runPolicy: Serial
+    source:
+      git:
+        uri: ${GIT_URL}
+      sourceSecret:
+        name: ${REPO_SECRET}
+      type: Git
+    strategy:
+      dockerStrategy:
+        env:
+          - name: OPENSHIFT_VERSION
+            value: ${OPENSHIFT_VERSION}
+        from:
+          kind: ImageStreamTag
+          name: ubuntu:16.04
+      type: Docker
+    successfulBuildsHistoryLimit: 5
+    triggers:
+    - type: ConfigChange
+      type: ImageChange

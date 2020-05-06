@@ -18,6 +18,17 @@ RUN apt-get update \
         libunwind8 \
         netcat
 
+#Install OpenShift Client binary
+ARG OPENSHIFT_VERSION
+ENV OPENSHIFT_VERSION ${OPENSHIFT_VERSION:-3.11.188}
+ENV OPENSHIFT_CLIENT_BINARY_URL=https://mirror.openshift.com/pub/openshift-v3/clients/${OPENSHIFT_VERSION}/linux/oc.tar.gz
+ADD ${OPENSHIFT_CLIENT_BINARY_URL} /tmp/
+
+RUN mkdir -p /usr/local/bin  \
+&& tar xzf /tmp/oc.tar.gz -C /usr/local/bin \
+&& chmod +x /usr/local/bin/oc \
+&& rm -rf /tmp/oc.tar.gz
+
 WORKDIR /azp
 
 COPY ./start.sh .
