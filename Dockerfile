@@ -17,12 +17,12 @@ RUN apt-get update \
         libicu55 \
         libunwind8 \
         netcat
-
+        
 #Install OpenShift Client binary - works for OpenShift v3 & v4
 ARG OPENSHIFT_VERSION
 ENV OPENSHIFT_VERSION ${OPENSHIFT_VERSION:-3.11.188}
 COPY scripts/download-ocp.sh /tmp/download-ocp.sh
-RUN /bin/bash /tmp/download-ocp.sh ${OPENSHIFT_VERSION}
+RUN /bin/bash /tmp/download-ocp.sh ${OPENSHIFT_VERSION} && exit $?
 
 WORKDIR /azp
 
