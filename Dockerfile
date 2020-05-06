@@ -16,7 +16,8 @@ RUN apt-get update \
         libcurl3 \
         libicu55 \
         libunwind8 \
-        netcat
+        netcat \
+        wget
 
 #Install OpenShift Client binary - works for OpenShift v3 & v4
 ARG OPENSHIFT_VERSION
