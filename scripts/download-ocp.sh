@@ -1,4 +1,6 @@
 #!/bin/bash
+# exit when any command fails
+set -e
 
 OPENSHIFT_VERSION=$1
 OPENSHIFT_3_CLIENT_BINARY_URL=https://mirror.openshift.com/pub/openshift-v3/clients/${OPENSHIFT_VERSION}/linux/oc.tar.gz
