@@ -10,14 +10,14 @@ parameters:
   name: AZP_URL
   required: true  
 - description: Azure DevOps Pool name
-  name: AZP_AGENT_POOL
+  name: AZP_POOL
   required: true
   value: ""
 objects:
 - apiVersion: v1
   data:
     AZP_URL: ${AZP_URL}
-    AZP_AGENT_POOL: ${AZP_AGENT_POOL}
+    AZP_POOL: ${AZP_POOL}
   kind: ConfigMap
   metadata:
     name: azure-agent
