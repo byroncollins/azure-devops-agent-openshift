@@ -92,4 +92,9 @@ print_header "4. Running Azure Pipelines agent..."
 
 # `exec` the node runtime so it's aware of TERM and INT signals
 # AgentService.js understands how to handle agent self-update and restart
-exec ./externals/node/bin/node ./bin/AgentService.js interactive
+exec ./externals/node/bin/node ./bin/AgentService.js interactive --once & wait $!
+
+# We expect the above process to exit when it runs once,
+# so we now run a cleanup process to remove this agent
+# from the pool
+cleanup

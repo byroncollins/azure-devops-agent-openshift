@@ -1,0 +1,97 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: azure-agent-deploymentconfig-template
+  annotations:
+    description: "azure-agent deploymentconfig template"
+    tags: "azure-agent"
+parameters:
+- description: Azure Agent name
+  name: AZP_AGENT_NAME
+  required: false
+  value: "azure-devops-agentoc "
+- description: Image to use
+  name: IMAGE
+  required: false
+  value: "azure-devops-agent:latest"
+- description: CPU Limit
+  name: CPU_LIMIT
+  required: false
+  value: "200m"
+- description: Memory limit
+  name: MEMORY_LIMIT
+  required: false
+  value: "300Mi"
+objects:
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: azure-devops-agent
+    name: azure-devops-agent
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      app: azure-devops-agent
+      deploymentconfig: azure-devops-agent
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: azure-devops-agent
+          deploymentconfig: azure-devops-agent
+      spec:
+        containers:
+        - env:
+          - name: AZP_AGENT_NAME
+            value: ${AZP_AGENT_NAME}
+          - name: AZP_URL
+            valueFrom:
+              configMapKeyRef:
+                key: AZP_URL
+                name: azure-agent
+          - name: AZP_POOL
+            valueFrom:
+              configMapKeyRef:
+                key: AZP_POOL
+                name: azure-agent
+          - name: AZP_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: AZP_TOKEN
+                name: azure-agent-token
+          image: azure-devops-agent:latest
+          imagePullPolicy: Always
+          name: azure-devops-agent
+          resources:
+            limits: 
+              cpu: ${CPU_LIMIT}
+              memory: ${MEMORY_LIMIT}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - azure-devops-agent
+        from:
+          kind: ImageStreamTag
+          name: ${IMAGE}
+      type: ImageChange
