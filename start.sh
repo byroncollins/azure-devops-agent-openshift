@@ -85,8 +85,9 @@ print_header "3. Configuring Azure Pipelines agent..."
   --replace \
   --acceptTeeEula & wait $!
 
+# Automatic Cleanup fails if you remove the AZP_TOKEN_FILE
 # remove the administrative token before accepting work
-rm $AZP_TOKEN_FILE
+#rm $AZP_TOKEN_FILE
 
 print_header "4. Running Azure Pipelines agent..."
 
