@@ -64,3 +64,13 @@ MEMORY_LIMIT        Memory limit                            300Mi
 # Example
 oc process -f manifests/azure-agent-deploymentconfig.yaml | oc apply -f -
 ```
+
+## Scale agents
+
+The Agents PODs deployed are designed to execute a single job and then exit and then OpenShift will spin up another POD to take over.
+
+Running PODs with multi replicas can improve the availablity of the agent running in OpenShift.
+
+```bash
+oc scale dc/azure-devops-agent --replicas=2
+```
