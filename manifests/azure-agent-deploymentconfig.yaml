@@ -6,10 +6,6 @@ metadata:
     description: "azure-agent deploymentconfig template"
     tags: "azure-agent"
 parameters:
-- description: Azure Agent name
-  name: AZP_AGENT_NAME
-  required: false
-  value: "azure-devops-agentoc "
 - description: Image to use
   name: IMAGE
   required: false
@@ -53,8 +49,6 @@ objects:
       spec:
         containers:
         - env:
-          - name: AZP_AGENT_NAME
-            value: ${AZP_AGENT_NAME}
           - name: AZP_URL
             valueFrom:
               configMapKeyRef:
