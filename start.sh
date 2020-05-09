@@ -82,6 +82,9 @@ print_header "3. Configuring Azure Pipelines agent..."
   --token $(cat "$AZP_TOKEN_FILE") \
   --pool "${AZP_POOL:-Default}" \
   --work "${AZP_WORK:-_work}" \
+  --proxyurl "${PROXY_URL-}" \
+  --proxyusername "${PROXY_USERNAME-}" \
+  --proxypassword "${PROXY_PASSWORD-}" \
   --replace \
   --acceptTeeEula & wait $!
 

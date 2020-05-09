@@ -5,6 +5,7 @@ OpenShift manifests and instructions for running Azure Agent on OpenShift
 # Documentation
 
 - [running azure agent in Docker](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/docker?view=azure-devops#linux)
+- based on [azure-pipelines-ephemeral-agents](https://github.com/microsoft/azure-pipelines-ephemeral-agents)
 
 # Build Instructions
 
@@ -12,6 +13,8 @@ OpenShift manifests and instructions for running Azure Agent on OpenShift
 
 - OpenShift Client Binary installed
 - Automatic cleanup of agents on container exit
+- ephermal agent runs a single job and then exits using --once 
+- enable proxy setting
 
 ## Create azure-repos pull secret
 
@@ -32,7 +35,7 @@ oc create secret generic azure-repo-secret \
  oc process -f manifests/azure-agent-buildconfig.yaml --param=GIT_URL=https://mocatad@dev.azure.com/mocatad/DNZ-269/_git/azure-devops-agent-openshift --param=REPO_SECRET=azure-repo-secret | oc apply -f -
  ```
 
-# Deployment Instructions
+# Deployment
 
 ## Create azure-agent configmap 
 

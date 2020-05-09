@@ -13,11 +13,19 @@ parameters:
   name: AZP_POOL
   required: true
   value: ""
+- description: PROXY URL
+  name: PROXY_URL
+  value: ""
+- description: PROXY Username
+  name: PROXY_USERNAME
+  value: ""
 objects:
 - apiVersion: v1
   data:
     AZP_URL: ${AZP_URL}
     AZP_POOL: ${AZP_POOL}
+    PROXY_URL: ${PROXY_URL}
+    PROXY_USERNAME: ${PROXY_USERNAME}
   kind: ConfigMap
   metadata:
     name: azure-agent
