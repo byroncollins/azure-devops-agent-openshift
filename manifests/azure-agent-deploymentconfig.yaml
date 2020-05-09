@@ -63,7 +63,22 @@ objects:
             valueFrom:
               secretKeyRef:
                 key: AZP_TOKEN
-                name: azure-agent-token
+                name: azure-agent
+          - name: PROXY_URL
+            valueFrom:
+              configMapKeyRef:
+                key: PROXY_URL
+                name: azure-agent
+          - name: PROXY_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                key: PROXY_USERNAME
+                name: azure-agent
+          - name: PROXY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: PROXY_PASSWORD
+                name: azure-agent
           image: azure-devops-agent:latest
           imagePullPolicy: Always
           name: azure-devops-agent
