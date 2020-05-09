@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes
 
 ARG ADDITIONAL_PACKAGES
-ENV ADDITIONAL_PACKAGES ${ADDITIONAL_PACKAGES-}
+ENV ADDITIONAL_PACKAGES ${ADDITIONAL_PACKAGES:-}
 RUN apt-get update \
 && apt-get install -y --no-install-recommends \
         ca-certificates \
