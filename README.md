@@ -40,9 +40,20 @@ oc create secret generic azure-repo-secret \
 ## Create azure-agent configmap 
 
 ```bash
+#OpenShift cluster NOT running behind a proxy
 oc process -f manifests/azure-agent-configmap.yaml \
     --param=AZP_URL='https://dev.azure.com/mocatad' \
-    --param=AZP_AGENT_NAME="Dev.Container" | oc apply -f -
+    --param=AZP_POOL="Dev.Container" | oc apply -f -
+```
+
+```bash
+#OpenShift cluster running behind a proxy
+oc process -f manifests/azure-agent-configmap.yaml \
+    --param=AZP_URL='https://dev.azure.com/mocatad' \
+    --param=AZP_POOL="Dev.Container" \
+    --param=HTTP_URL="http://myproxy:3128" \
+    --param-HTTP_USERNAME="username to access process" | oc apply -f -
+```
 ```
 
 ## Create azure-agent secret with PAT
@@ -50,9 +61,18 @@ oc process -f manifests/azure-agent-configmap.yaml \
 PAT can be generated as documented [here](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/v2-linux?view=azure-devops#permissions) or extraced from password store
 
 ```bash
+#OpenShift cluster NOT running behind a proxy
 oc process -f manifests/azure-agent-secret.yaml \
     --param=AZP_TOKEN='<TOKEN>' | oc apply -f - 
 ```
+
+```bash
+#OpenShift cluster  running behind a proxy that requires a password
+oc process -f manifests/azure-agent-secret.yaml \
+    --param=AZP_TOKEN='<TOKEN>' \
+    --param=PROXY_PASSWORD="mypassword" | oc apply -f - 
+```
+
 
 ## Deploy azure-devops-agent POD
 
@@ -72,7 +92,7 @@ oc process -f manifests/azure-agent-deploymentconfig.yaml | oc apply -f -
 
 The Agents PODs deployed are designed to execute a single job and then exit and then OpenShift will spin up another POD to take over.
 
-Running PODs with multi replicas can improve the availablity of the agent running in OpenShift.
+Running PODs with multi replicas can improve the availablity of the agents running in OpenShift.
 
 ```bash
 oc scale dc/azure-devops-agent --replicas=2
