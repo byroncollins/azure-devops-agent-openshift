@@ -15,6 +15,9 @@ parameters:
 - description: OpenShift client binary version to install
   name: OPENSHIFT_VERSION
   value: "3.11.188"
+- description: Additional ubuntu packages to install
+  name: ADDITIONAL_PACKAGES
+  value: ""
 objects:
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
@@ -54,7 +57,9 @@ objects:
       dockerStrategy:
         env:
           - name: OPENSHIFT_VERSION
-            value: ${OPENSHIFT_VERSION}
+            value: "${OPENSHIFT_VERSION}"
+          - name: ADDITIONAL_PACKAGES
+            value: "${ADDITIONAL_PACKAGES}"
         from:
           kind: ImageStreamTag
           name: ubuntu:16.04

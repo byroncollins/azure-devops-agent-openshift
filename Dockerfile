@@ -6,6 +6,8 @@ FROM ubuntu:16.04
 ENV DEBIAN_FRONTEND=noninteractive
 RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes
 
+ARG ADDITIONAL_PACKAGES
+ENV ADDITIONAL_PACKAGES ${ADDITIONAL_PACKAGES-}
 RUN apt-get update \
 && apt-get install -y --no-install-recommends \
         ca-certificates \
@@ -16,13 +18,15 @@ RUN apt-get update \
         libcurl3 \
         libicu55 \
         libunwind8 \
-        netcat
+        netcat \
+        ${ADDITIONAL_PACKAGES}
         
 #Install OpenShift Client binary - works for OpenShift v3 & v4
 ARG OPENSHIFT_VERSION
 ENV OPENSHIFT_VERSION ${OPENSHIFT_VERSION:-3.11.188}
 COPY scripts/download-ocp.sh /tmp/download-ocp.sh
-RUN /bin/bash /tmp/download-ocp.sh ${OPENSHIFT_VERSION}
+RUN /bin/bash /tmp/download-ocp.sh ${OPENSHIFT_VERSION} \
+&& rm -rf /tmp/download-ocp.sh
 
 WORKDIR /azp
 
