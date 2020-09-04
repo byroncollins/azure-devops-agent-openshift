@@ -85,7 +85,8 @@ CPU_LIMIT           CPU Limit                               200m
 MEMORY_LIMIT        Memory limit                            300Mi
 
 # Example
-oc process -f manifests/azure-agent-deploymentconfig.yaml | oc apply -f -
+oc process -f manifests/azure-agent-deploymentconfig.yaml \
+  --param IMAGE=byroncollins/azure-devops-agent:latest | oc apply -f -
 ```
 
 ## Scale agents
