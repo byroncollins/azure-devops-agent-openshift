@@ -15,11 +15,11 @@ RUN apt-get update \
         jq \
         git \
         iputils-ping \
-        libcurl3 \
-        libicu55 \
+        libcurl4 \
+        libicu60 \
         libunwind8 \
         netcat \
-        ${ADDITIONAL_PACKAGES}
+        ${ADDITIONAL_PACKAGES
         
 #Install OpenShift Client binary - works for OpenShift v3 & v4
 ENV OPENSHIFT_VERSION ${OPENSHIFT_VERSION:-3.11.272}
