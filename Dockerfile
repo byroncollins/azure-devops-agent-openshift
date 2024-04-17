@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 
 # To make it easier for build and release pipelines to run apt-get,
 # configure apt to not require confirmation (assume the -y argument by default)
@@ -21,8 +21,8 @@ RUN apt-get update \
         netcat \
         ${ADDITIONAL_PACKAGES}
         
-#Install OpenShift Client binary - works for OpenShift v3 & v4
-ENV OPENSHIFT_VERSION ${OPENSHIFT_VERSION:-3.11.272}
+#Install OpenShift Client binary
+ENV OPENSHIFT_VERSION ${OPENSHIFT_VERSION:-4.15.9}
 COPY scripts/download-ocp.sh /tmp/download-ocp.sh
 RUN /bin/bash /tmp/download-ocp.sh ${OPENSHIFT_VERSION} \
 && rm -rf /tmp/download-ocp.sh
