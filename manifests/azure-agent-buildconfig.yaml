@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
   name: azure-agent-buildconfig-template
@@ -14,7 +14,7 @@ parameters:
   value: ""
 - description: OpenShift client binary version to install
   name: OPENSHIFT_VERSION
-  value: "3.11.272"
+  value: "4.15.9"
 - description: Additional ubuntu packages to install
   name: ADDITIONAL_PACKAGES
   value: ""
@@ -62,7 +62,7 @@ objects:
             value: "${ADDITIONAL_PACKAGES}"
         from:
           kind: ImageStreamTag
-          name: ubuntu:18.04
+          name: ubuntu:22.04
       type: Docker
     successfulBuildsHistoryLimit: 5
     triggers:
