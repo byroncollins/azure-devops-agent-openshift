@@ -32,9 +32,8 @@ RUN apt-get update \
 ENV OPENSHIFT_VERSION ${OPENSHIFT_VERSION:-4.15.9}
 COPY scripts/download-ocp.sh /tmp/download-ocp.sh
 RUN /bin/bash /tmp/download-ocp.sh ${OPENSHIFT_VERSION} \
-&& rm -rf /tmp/download-ocp.sh
-
-WORKDIR /azp
+&& rm -rf /tmp/download-ocp.sh \
+&& mkdir /azp
 
 COPY ./start.sh .
 
