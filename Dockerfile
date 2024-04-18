@@ -8,6 +8,9 @@ RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes
 
 ARG ADDITIONAL_PACKAGES
 ENV ADDITIONAL_PACKAGES ${ADDITIONAL_PACKAGES:-}
+# Also can be "linux-arm", "linux-arm64".
+ENV TARGETARCH="linux-x64"
+
 RUN apt-get update \
 && apt-get install -y --no-install-recommends \
         ca-certificates \
@@ -16,10 +19,14 @@ RUN apt-get update \
         git \
         iputils-ping \
         libcurl4 \
-        libicu60 \
+        libicu70 \
         libunwind8 \
         netcat \
-        ${ADDITIONAL_PACKAGES}
+        zip \
+        unzip \
+        ${ADDITIONAL_PACKAGES} \
+&& rm -rf /var/lib/apt/lists/* \
+&& apt-get clean    
         
 #Install OpenShift Client binary
 ENV OPENSHIFT_VERSION ${OPENSHIFT_VERSION:-4.15.9}
@@ -29,7 +36,11 @@ RUN /bin/bash /tmp/download-ocp.sh ${OPENSHIFT_VERSION} \
 
 WORKDIR /azp
 
-COPY ./start.sh .
-RUN chmod +x start.sh
+COPY ./start.sh ./
+RUN chmod +x ./start.sh \
+&&  chgrp -R 0 /azp \
+&&  chmod -R g=u /azp
+
+USER 1001
 
 CMD ["./start.sh"]
