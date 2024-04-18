@@ -16,6 +16,7 @@ curl --silent --show-error --output "/tmp/${OPENSHIFT_BINARY_FILE}" "${OPENSHIFT
 
 #Install OpenShift Client Binary
 mkdir -p /usr/local/bin 
-tar xzf "/tmp/${OPENSHIFT_BINARY_FILE}" oc kubectl -C /usr/local/bin
+tar xzf "/tmp/${OPENSHIFT_BINARY_FILE}" -C /usr/local/bin
 chmod +x /usr/local/bin/oc /usr/local/bin/kubectl
 rm -rf "/tmp/${OPENSHIFT_BINARY_FILE}"
+rm /usr/local/bin/README.md
