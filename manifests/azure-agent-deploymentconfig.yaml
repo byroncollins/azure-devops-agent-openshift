@@ -96,11 +96,3 @@ objects:
     test: false
     triggers:
     - type: ConfigChange
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - azure-devops-agent
-        from:
-          kind: ImageStreamTag
-          name: azure-devops-agent:latest
-      type: ImageChange
