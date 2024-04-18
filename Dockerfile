@@ -41,7 +41,7 @@ COPY ./start.sh .
 RUN chmod 755 ./start.sh \
 &&  chmod 755 /azp \
 &&  chgrp -R 0 /azp \
-&&  chmod -R g=u /azp
+&&  chmod -R og+rw /azp
 
 USER 1001
 
