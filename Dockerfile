@@ -36,12 +36,13 @@ RUN /bin/bash /tmp/download-ocp.sh ${OPENSHIFT_VERSION} \
 
 WORKDIR /azp
 
-COPY ./start.sh ./
+COPY ./start.sh .
 
 RUN chmod 755 ./start.sh \
+&&  chmod 755 /azp \
 &&  chgrp -R 0 /azp \
 &&  chmod -R g=u /azp
 
 USER 1001
 
-CMD ["./start.sh"]
+ENTRYPOINT [ "./start.sh", "--once" ]
