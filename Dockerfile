@@ -35,9 +35,11 @@ RUN /bin/bash /tmp/download-ocp.sh ${OPENSHIFT_VERSION} \
 && rm -rf /tmp/download-ocp.sh \
 && mkdir /azp
 
-COPY ./start.sh .
+WORKDIR /azp
 
-RUN chmod 755 ./start.sh \
+COPY start.sh .
+
+RUN chmod 755 start.sh \
 &&  chmod 755 /azp \
 &&  chgrp -R 0 /azp \
 &&  chmod -R og+rw /azp
