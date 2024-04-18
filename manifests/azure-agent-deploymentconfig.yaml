@@ -79,7 +79,7 @@ objects:
               secretKeyRef:
                 key: PROXY_PASSWORD
                 name: azure-agent
-          image: azure-devops-agent:latest
+          image: ${IMAGE}
           imagePullPolicy: Always
           name: azure-devops-agent
           resources:
@@ -102,5 +102,5 @@ objects:
         - azure-devops-agent
         from:
           kind: ImageStreamTag
-          name: ${IMAGE}
+          name: azure-devops-agent:latest
       type: ImageChange
