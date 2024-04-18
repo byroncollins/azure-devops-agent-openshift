@@ -39,9 +39,9 @@ WORKDIR /azp
 
 COPY start.sh .
 
-RUN &&  chgrp -R 0 /azp \
+RUN chgrp -R 0 /azp \
 &&  chmod -R g=u /azp \
-&& chmod 755 start.sh 
+&&  chmod 755 start.sh 
 
 USER 1001
 
