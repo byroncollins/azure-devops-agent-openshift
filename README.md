@@ -54,7 +54,6 @@ oc process -f manifests/azure-agent-configmap.yaml \
     --param=HTTP_URL="http://myproxy:3128" \
     --param-HTTP_USERNAME="username to access process" | oc apply -f -
 ```
-```
 
 ## Create azure-agent secret with PAT
 
@@ -62,8 +61,7 @@ PAT can be generated as documented [here](https://docs.microsoft.com/en-us/azure
 
 ```bash
 #OpenShift cluster NOT running behind a proxy
-oc process -f manifests/azure-agent-secret.yaml \
-    --param=AZP_TOKEN='<TOKEN>' | oc apply -f - 
+oc process -f manifests/azure-agent-secret.yaml --param=AZP_TOKEN='<TOKEN>' | oc apply -f - 
 ```
 
 ```bash
@@ -78,15 +76,14 @@ oc process -f manifests/azure-agent-secret.yaml \
 
 ```bash
 # Defaults
-oc process -f manifests/azure-agent-deploymentconfig.yaml --parameters=true
+oc process -f manifests/azure-agent-deployment.yaml --parameters=true
 NAME                DESCRIPTION         GENERATOR           VALUE
 IMAGE               Image to use                            azure-devops-agent:latest
 CPU_LIMIT           CPU Limit                               200m
 MEMORY_LIMIT        Memory limit                            300Mi
 
 # Example
-oc process -f manifests/azure-agent-deploymentconfig.yaml \
-  --param IMAGE=byroncollins/azure-devops-agent:latest | oc apply -f -
+oc process -f manifests/azure-agent-deployment.yaml --param IMAGE=byroncollins/azure-devops-agent:latest | oc apply -f -
 ```
 
 ## Scale agents
@@ -96,7 +93,7 @@ The Agents PODs deployed are designed to execute a single job and then exit and 
 Running PODs with multi replicas can improve the availablity of the agents running in OpenShift.
 
 ```bash
-oc scale dc/azure-devops-agent --replicas=2
+oc scale deployment/azure-devops-agent --replicas=2
 ```
 
 # Deployment from Azure Pipelines

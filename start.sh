@@ -31,7 +31,7 @@ cleanup() {
     # If the agent has some running jobs, the configuration removal process will fail.
     # So, give it some time to finish the job.
     while true; do
-      ./config.sh remove --unattended --auth "PAT" --token $(cat "${AZP_TOKEN_FILE}") && break
+      ./config.sh remove --unattended --auth "PAT" --token "$(cat "${AZP_TOKEN_FILE}")" && break
 
       echo "Retrying in 30 seconds..."
       sleep 30
@@ -51,15 +51,15 @@ export VSO_AGENT_IGNORE="AZP_TOKEN,AZP_TOKEN_FILE"
 print_header "1. Determining matching Azure Pipelines agent..."
 
 AZP_AGENT_PACKAGES=$(curl -LsS \
-    -u user:$(cat "${AZP_TOKEN_FILE}") \
+    -u "user:$(cat "${AZP_TOKEN_FILE}")" \
     -H "Accept:application/json;" \
     "${AZP_URL}/_apis/distributedtask/packages/agent?platform=${TARGETARCH}&top=1")
 
 AZP_AGENT_PACKAGE_LATEST_URL=$(echo "${AZP_AGENT_PACKAGES}" | jq -r ".value[0].downloadUrl")
 
-if [ -z "${AZP_AGENT_PACKAGE_LATEST_URL}" -o "${AZP_AGENT_PACKAGE_LATEST_URL}" == "null" ]; then
+if [ -z "${AZP_AGENT_PACKAGE_LATEST_URL}" ] || [ "${AZP_AGENT_PACKAGE_LATEST_URL}" == "null" ]; then
   echo 1>&2 "error: could not determine a matching Azure Pipelines agent"
-  echo 1>&2 "check that account "${AZP_URL}" is correct and the token is valid for that account"
+  echo 1>&2 "check that account \"${AZP_URL}\" is correct and the token is valid for that account"
   exit 1
 fi
 
@@ -70,6 +70,7 @@ curl -LsS "${AZP_AGENT_PACKAGE_LATEST_URL}" | tar -xz -C /azp/agent & wait $!
 mv ./agent/* .
 rmdir agent
 
+# shellcheck source=/dev/null
 source ./env.sh
 
 trap "cleanup; exit 0" EXIT
@@ -82,7 +83,7 @@ print_header "3. Configuring Azure Pipelines agent..."
   --agent "${AZP_AGENT_NAME:-$(hostname)}" \
   --url "${AZP_URL}" \
   --auth "PAT" \
-  --token $(cat "${AZP_TOKEN_FILE}") \
+  --token "$(cat "${AZP_TOKEN_FILE}")" \
   --pool "${AZP_POOL:-Default}" \
   --work "${AZP_WORK:-_work}" \
   --proxyurl "${PROXY_URL-}" \
