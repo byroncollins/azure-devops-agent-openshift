@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes
 
 ARG ADDITIONAL_PACKAGES
-ENV ADDITIONAL_PACKAGES ${ADDITIONAL_PACKAGES:-}
+ENV ADDITIONAL_PACKAGES=${ADDITIONAL_PACKAGES:-}
 # Also can be "linux-arm", "linux-arm64".
 ENV TARGETARCH="linux-x64"
 
@@ -29,7 +29,8 @@ RUN apt-get update \
 && apt-get clean    
         
 #Install OpenShift Client binary
-ENV OPENSHIFT_VERSION ${OPENSHIFT_VERSION:-4.15.9}
+ARG OPENSHIFT_VERSION
+ENV OPENSHIFT_VERSION=${OPENSHIFT_VERSION:-4.16.19}
 COPY scripts/download-ocp.sh /tmp/download-ocp.sh
 RUN /bin/bash /tmp/download-ocp.sh ${OPENSHIFT_VERSION} \
 && rm -rf /tmp/download-ocp.sh \
@@ -41,7 +42,7 @@ COPY start.sh .
 
 RUN chgrp -R 0 /azp \
 &&  chmod -R g=u /azp \
-&&  chmod 755 start.sh 
+&&  chmod +x start.sh 
 
 USER 1001
 

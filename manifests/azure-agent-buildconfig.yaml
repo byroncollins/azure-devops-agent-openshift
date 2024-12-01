@@ -14,7 +14,7 @@ parameters:
   value: ""
 - description: OpenShift client binary version to install
   name: OPENSHIFT_VERSION
-  value: "4.15.9"
+  value: "4.16.19"
 - description: Additional ubuntu packages to install
   name: ADDITIONAL_PACKAGES
   value: ""
