@@ -39,10 +39,14 @@ RUN /bin/bash /tmp/download-ocp.sh ${OPENSHIFT_VERSION} \
 WORKDIR /azp
 
 COPY start.sh .
+COPY health.sh .
 
 RUN chgrp -R 0 /azp \
 &&  chmod -R g=u /azp \
-&&  chmod +x start.sh 
+&&  chmod +x start.sh \
+&&  chmod +x health.sh
+
+HEALTHCHECK --interval=30s CMD [ "/azp/health.sh" ]
 
 USER 1001
 
