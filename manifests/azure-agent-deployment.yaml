@@ -1,9 +1,9 @@
-apiVersion: v1
+apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
-  name: azure-agent-deploymentconfig-template
+  name: azure-agent-deployment-template
   annotations:
-    description: "azure-agent deploymentconfig template"
+    description: "azure-agent deployment template"
     tags: "azure-agent"
 parameters:
 - description: Image to use
@@ -19,8 +19,8 @@ parameters:
   required: false
   value: "300Mi"
 objects:
-- apiVersion: apps.openshift.io/v1
-  kind: DeploymentConfig
+- apiVersion: apps/v1
+  kind: Deployment
   metadata:
     labels:
       app: azure-devops-agent
@@ -29,8 +29,8 @@ objects:
     replicas: 1
     revisionHistoryLimit: 10
     selector:
-      app: azure-devops-agent
-      deploymentconfig: azure-devops-agent
+      matchLabels:
+        app: azure-devops-agent
     strategy:
       activeDeadlineSeconds: 21600
       resources: {}
@@ -40,12 +40,11 @@ objects:
         maxUnavailable: 25%
         timeoutSeconds: 600
         updatePeriodSeconds: 1
-      type: Rolling
+      type: RollingUpdate  
     template:
       metadata:
         labels:
           app: azure-devops-agent
-          deploymentconfig: azure-devops-agent
       spec:
         containers:
         - env:
@@ -79,7 +78,7 @@ objects:
               secretKeyRef:
                 key: PROXY_PASSWORD
                 name: azure-agent
-          image: azure-devops-agent:latest
+          image: ${IMAGE}
           imagePullPolicy: Always
           name: azure-devops-agent
           resources:
@@ -94,13 +93,3 @@ objects:
         securityContext: {}
         terminationGracePeriodSeconds: 30
     test: false
-    triggers:
-    - type: ConfigChange
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - azure-devops-agent
-        from:
-          kind: ImageStreamTag
-          name: ${IMAGE}
-      type: ImageChange
